@@ -132,23 +132,20 @@ int main(void)
 			break;
 		}
 	}
-	
-	while(1){ //waiting person start mission
-		HAL_Delay(200);
+		HAL_Delay(2000);
 		HAL_GPIO_TogglePin(led_r_GPIO_Port,led_r_Pin);
 		HAL_GPIO_TogglePin(led_g_GPIO_Port,led_g_Pin);
 		
-		if(HAL_GPIO_ReadPin(key_d_GPIO_Port,key_d_Pin) == GPIO_PIN_SET){
+		if(HAL_GPIO_ReadPin(key_d_GPIO_Port,key_d_Pin) == GPIO_PIN_SET)
 			HAL_GPIO_WritePin(led_r_GPIO_Port,led_r_Pin,GPIO_PIN_SET); //turn off red led;
 			//A1_turn_slow_test();
 			
-		modfiy_cmd(&cmd_right,2,0.0,0.0,0);
-		unitreeA1_rxtx(&huart6);
-			
+		unitreeA1_sendCMD(&cmd_left,2, 0.15, 0, 0, 0, 0);
+		HAL_Delay(100);
+		unitreeA1_sendCMD(&cmd_left,1, 0.2, 0, 0, 0, 0);
 			//HAL_TIM_Base_Start_IT(&htim6);// 50hz event
-			break;
-		}
-	}
+	
+	
 	
 		
 

@@ -19,9 +19,7 @@ motor_recv_t id02_right_data; // 右腿02号电机接收数据体
 extern uint8_t Left_leg_RevData[78];
 extern uint8_t Right_leg_RevData[78];
 
-	uint8_t A1cmd_left[34];
-	uint8_t A1cmd_right[34];
-
+uint8_t A1_cmd[34];
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
@@ -130,80 +128,30 @@ uint32_t crc32_core(uint32_t *ptr, uint32_t len)
     return CRC32;
 }
 
-void modfiy_cmd(motor_send_t *send,uint8_t id, float Pos, float KP, float KW)
+void unitreeA1_sendCMD(motor_send_t *send,uint8_t id,float T, float W, float Pos, float KP, float KW)
 {
+        send->motor_send_data.head.start[0] = 0xFE;
+        send->motor_send_data.head.start[1] = 0xEE;
+        send->motor_send_data.head.motorID = id;
+        send->motor_send_data.head.reserved = 0x00;
 
-    send->hex_len = 34;  
-    send->mode = 10;     //closed loop
-		send->id = id;
-    send->K_P = KP;
-    send->K_W = KW;
-    send->Pos = 6.2832*9.1*2*Pos;
-    send->W = 0;
-    send->T = 0.0;
-}
+        send->motor_send_data.Mdata.mode = 10; //closed loop
+        send->motor_send_data.Mdata.ModifyBit = 0xFF;
+        send->motor_send_data.Mdata.ReadBit = 0x00;
+        send->motor_send_data.Mdata.reserved = 0x00;
+        send->motor_send_data.Mdata.Modify.F = 0;
+        send->motor_send_data.Mdata.T = T * 256; //toque
+        send->motor_send_data.Mdata.W = W * 128; //speed
+        send->motor_send_data.Mdata.Pos = (int)((9.1f*2*Pos) * 16384.0f);
+        send->motor_send_data.Mdata.K_P = KP * 2048;  //Position stiffness
+        send->motor_send_data.Mdata.K_W = KW * 1024;   //speed stiffness
+        send->motor_send_data.Mdata.LowHzMotorCmdIndex = 0;
+        send->motor_send_data.Mdata.LowHzMotorCmdByte = 0;
+        send->motor_send_data.Mdata.Res[0] = send->Res;
+        send->motor_send_data.CRCdata.u32 = crc32_core((uint32_t *)(&send->motor_send_data), 7);
 
-void unitreeA1_rxtx(UART_HandleTypeDef *huart)
-{
-
-	
-    if (huart == &huart1)
-    {
-        /*—————————————————————————————————————————左腿代码范围————————————————————————————————————————————————*/
-        // 此处为左腿电机结构体//
-        cmd_left.motor_send_data.head.start[0] = 0xFE;
-        cmd_left.motor_send_data.head.start[1] = 0xEE;
-        cmd_left.motor_send_data.head.motorID = cmd_left.id;
-        cmd_left.motor_send_data.head.reserved = 0x00;
-
-        cmd_left.motor_send_data.Mdata.mode = cmd_left.mode;
-        cmd_left.motor_send_data.Mdata.ModifyBit = 0xFF;
-        cmd_left.motor_send_data.Mdata.ReadBit = 0x00;
-        cmd_left.motor_send_data.Mdata.reserved = 0x00;
-        cmd_left.motor_send_data.Mdata.Modify.F = 0;
-        cmd_left.motor_send_data.Mdata.T = cmd_left.T * 256;
-        cmd_left.motor_send_data.Mdata.W = cmd_left.W * 128;
-        cmd_left.motor_send_data.Mdata.Pos = (int)((cmd_left.Pos / 6.2832f) * 16384.0f);
-        cmd_left.motor_send_data.Mdata.K_P = cmd_left.K_P * 2048;
-        cmd_left.motor_send_data.Mdata.K_W = cmd_left.K_W * 1024;
-        cmd_left.motor_send_data.Mdata.LowHzMotorCmdIndex = 0;
-        cmd_left.motor_send_data.Mdata.LowHzMotorCmdByte = 0;
-        cmd_left.motor_send_data.Mdata.Res[0] = cmd_left.Res;
-
-        cmd_left.motor_send_data.CRCdata.u32 = crc32_core((uint32_t *)(&cmd_left.motor_send_data), 7);
-
-        memcpy(A1cmd_left, &cmd_left.motor_send_data, 34);
-
-        HAL_UART_Transmit_DMA(&huart1, A1cmd_left, 34);
-    }
-
-    if (huart == &huart6)
-    {
-        /*—————————————————————————————————————————右腿代码范围————————————————————————————————————————————————————————*/
-        // 此处为右腿一号电机结构体//
-        cmd_right.motor_send_data.head.start[0] = 0xFE;
-        cmd_right.motor_send_data.head.start[1] = 0xEE;
-        cmd_right.motor_send_data.head.motorID = cmd_right.id;
-        cmd_right.motor_send_data.head.reserved = 0x00;
-
-        cmd_right.motor_send_data.Mdata.mode = cmd_right.mode;
-        cmd_right.motor_send_data.Mdata.ModifyBit = 0xFF;
-        cmd_right.motor_send_data.Mdata.ReadBit = 0x00;
-        cmd_right.motor_send_data.Mdata.reserved = 0x00;
-        cmd_right.motor_send_data.Mdata.Modify.F = 0;
-        cmd_right.motor_send_data.Mdata.T = cmd_right.T * 256;
-        cmd_right.motor_send_data.Mdata.W = cmd_right.W * 128;
-        cmd_right.motor_send_data.Mdata.Pos = (int)((cmd_right.Pos / 6.2832f) * 16384.0f);
-        cmd_right.motor_send_data.Mdata.K_P = cmd_right.K_P * 2048;
-        cmd_right.motor_send_data.Mdata.K_W = cmd_right.K_W * 1024;
-        cmd_right.motor_send_data.Mdata.LowHzMotorCmdIndex = 0;
-        cmd_right.motor_send_data.Mdata.LowHzMotorCmdByte = 0;
-        cmd_right.motor_send_data.Mdata.Res[0] = cmd_right.Res;
-
-        cmd_right.motor_send_data.CRCdata.u32 = crc32_core((uint32_t *)(&cmd_right.motor_send_data), 7);
-
-        memcpy(A1cmd_right, &cmd_right.motor_send_data, 34);
-
-        HAL_UART_Transmit_DMA(&huart6, A1cmd_right, 34);
-    }
+        memcpy(A1_cmd, &send->motor_send_data, 34);
+				
+				if(send->usart_port == USART1_BASE)HAL_UART_Transmit_DMA(&huart1, A1_cmd, 34);
+				else if(send->usart_port == USART6_BASE)HAL_UART_Transmit_DMA(&huart6, A1_cmd, 34);	
 }

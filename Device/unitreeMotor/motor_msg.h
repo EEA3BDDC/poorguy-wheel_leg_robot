@@ -148,8 +148,10 @@ typedef struct
         float Pos;           //期望关节位置（rad）
         float K_P;           //关节刚度系数
         float K_W;           //关节速度系数
-
+				
+	
         COMData32 Res;                    // 通讯 保留字节  用于实现别的一些通讯内容
+				uint32_t usart_port;
       //电机控制数据结构体，详见motor_msg.h
 }motor_send_t;
 
@@ -167,7 +169,7 @@ typedef struct
 		//bool correct;   //接收数据是否完整（true完整，false不完整）
 		//uint8_t right_Date[MOTOR_RX_LENGTH];
 	
-	    unsigned char motor_id; //电机ID
+				unsigned char motor_id; //电机ID
         unsigned char mode;     // 0:空闲, 5:开环转动, 10:闭环FOC控制
         int Temp;               //温度
         int MError;             //错误码
@@ -197,8 +199,8 @@ typedef struct
 	        unsigned char mode;     // 0:空闲, 5:开环转动, 10:闭环FOC控制
 
 	        float T;                // 电机输出力矩
-			float W;                // 电机速度
-			float Pos;              // 电机位置
+					float W;                // 电机速度
+					float Pos;              // 电机位置
 	        float K_P;           //关节刚度系数
 	        float K_W;           //关节速度系数
 	

@@ -1,5 +1,5 @@
 #include "BMI088driver.h"
-
+#include "unitreeA1_cmd.h"
 #include "bsp_can.h"
 #include "dm_motor_drv.h"
 #include "dm_motor_ctrl.h"
@@ -24,11 +24,14 @@ void bsp_device_init(){
 	
 	HAL_UART_Receive_DMA(&huart1,(uint8_t *)Left_leg_RevData,78); // ????DMA?? 
 	HAL_UART_Receive_DMA(&huart6,(uint8_t *)Right_leg_RevData,78); // ????DMA?? 
-
+	
+	cmd_left.usart_port = USART1_BASE;
+	cmd_right.usart_port = USART6_BASE;
+	
 #ifdef EN_ros
 		setup();//ros communicate sys
 #endif
-
+	
 #ifdef EN_DM_motor
 	dm_motor_enable(&hcan1, &motor[Motor1]);
 	dm_motor_enable(&hcan2, &motor[Motor1]);
@@ -36,7 +39,7 @@ void bsp_device_init(){
 #endif
 	
 	
-	startup_sing();	//init ALL ok
+	//startup_sing();	//init ALL ok
 }
 
 

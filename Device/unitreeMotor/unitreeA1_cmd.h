@@ -26,12 +26,7 @@ extern motor_recv_t id02_right_date; // 右腿02号电机接收数据体
  @param KP   电机刚度系数
  @param KW   电机速度系数
 */
-void modfiy_cmd(motor_send_t *send,uint8_t id, float Pos, float KP, float KW);
-
-/// @brief 用来和电机通讯的代码，将获取的数据存入对应结构体中
-/// @param huart 需要使用的串口，huart1为左侧，6为右侧
-
-void unitreeA1_rxtx(UART_HandleTypeDef *huart);
+void unitreeA1_sendCMD(motor_send_t *send,uint8_t id,float T, float W, float Pos, float KP, float KW);
 
 uint32_t crc32_core(uint32_t *ptr, uint32_t len);
 

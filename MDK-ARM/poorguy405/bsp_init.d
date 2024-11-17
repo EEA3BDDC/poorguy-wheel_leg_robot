@@ -40,6 +40,10 @@ poorguy405\bsp_init.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 poorguy405\bsp_init.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h
 poorguy405\bsp_init.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
 poorguy405\bsp_init.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
+poorguy405\bsp_init.o: ../Device/unitreeMotor/unitreeA1_cmd.h
+poorguy405\bsp_init.o: ../Device/unitreeMotor/motor_msg.h
+poorguy405\bsp_init.o: ../Device/unitreeMotor/motor_msg.h
+poorguy405\bsp_init.o: ../Core/Inc/usart.h
 poorguy405\bsp_init.o: ../Device/DM4310/bsp_can.h
 poorguy405\bsp_init.o: ../Core/Inc/can.h
 poorguy405\bsp_init.o: ../Device/DM4310/dm_motor_drv.h
@@ -47,4 +51,3 @@ poorguy405\bsp_init.o: ../Device/DM4310/dm_motor_ctrl.h
 poorguy405\bsp_init.o: ../Device/beep/beep.h
 poorguy405\bsp_init.o: ../Device/odrive/odrive_can.h
 poorguy405\bsp_init.o: ../App/ros_main.h
-poorguy405\bsp_init.o: ../Core/Inc/usart.h

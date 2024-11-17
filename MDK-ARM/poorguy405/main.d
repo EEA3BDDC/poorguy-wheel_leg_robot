@@ -67,7 +67,7 @@ poorguy405\main.o: C:\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\stdlib.h
 poorguy405\main.o: C:\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\string.h
 poorguy405\main.o: ../Core/Inc/gpio.h
 poorguy405\main.o: ../App/unitree_A1_change_ID.h
-poorguy405\main.o: ..\Device\bsp_init\bsp_init.h
-poorguy405\main.o: ..\Device\unitreeMotor\unitreeA1_cmd.h
-poorguy405\main.o: ..\Device\unitreeMotor\motor_msg.h
-poorguy405\main.o: ..\Device\unitreeMotor\motor_msg.h
+poorguy405\main.o: ../Device/bsp_init/bsp_init.h
+poorguy405\main.o: ../Device/unitreeMotor/unitreeA1_cmd.h
+poorguy405\main.o: ../Device/unitreeMotor/motor_msg.h
+poorguy405\main.o: ../Device/unitreeMotor/motor_msg.h
