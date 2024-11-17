@@ -22,15 +22,6 @@
 #include "stm32f4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "BMI088driver.h"
-#include "MahonyAHRS.h"
-#include "pid.h"
-
-#include "bsp_can.h"
-#include "dm_motor_drv.h"
-#include "dm_motor_ctrl.h"
-
-#include "odrive_can.h"
 
 /* USER CODE END Includes */
 
@@ -52,19 +43,6 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 
-float Gyro[3], Accel[3], temp;
-AHRSIMU_t IMU;
-extern float left_wheel_pos,right_wheel_pos;
-extern PID_PARAM_t angle_pid;
-
-float vel_pid_output_value; 
-float Angle_pid_output_value;
-	
-
-extern UART_HandleTypeDef huart5;
-extern UART_HandleTypeDef huart4;
-extern CAN_HandleTypeDef hcan1;
-extern CAN_HandleTypeDef hcan2;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -288,16 +266,7 @@ void USART1_IRQHandler(void)
 void EXTI15_10_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI15_10_IRQn 0 */
-	if(HAL_GPIO_ReadPin(key_d_GPIO_Port,key_d_Pin) == GPIO_PIN_RESET){
-		send_wheel_torque(0,0);
-		HAL_TIM_Base_Stop_IT(&htim6);
-		HAL_GPIO_WritePin(led_r_GPIO_Port,led_r_Pin,GPIO_PIN_RESET);
-		HAL_GPIO_WritePin(led_g_GPIO_Port,led_g_Pin,GPIO_PIN_RESET);		
-	}
-	else {
-		HAL_GPIO_WritePin(led_r_GPIO_Port,led_r_Pin,GPIO_PIN_SET);
-		HAL_TIM_Base_Start_IT(&htim6);
-	}
+
   /* USER CODE END EXTI15_10_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(key_d_Pin);
   /* USER CODE BEGIN EXTI15_10_IRQn 1 */
@@ -367,41 +336,7 @@ void UART5_IRQHandler(void)
 void TIM6_DAC_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM6_DAC_IRQn 0 */
-	static uint8_t time_1ms,jj;
 
-
-	
-	BMI088_read(Gyro, Accel, &temp);
-	MahonyAHRSupdateIMU(&IMU,Gyro[0],Gyro[1],Gyro[2],Accel[0],Accel[1],Accel[2]);
-	
-	time_1ms++;
-	if(time_1ms == 10){//time-sharing operating
-		HAL_GPIO_TogglePin(led_g_GPIO_Port,led_g_Pin);
-		time_1ms = 0;
-	}
-
-			if(jj == 0){
-				jj = 1;
-				vel_pid_output_value = Velocity_PID(-left_wheel_vel,right_wheel_vel,0);		
-				Angle_pid_output_value = Angle_PID_Output(vel_pid_output_value,IMU.Pitch);
-				//send_wheel_torque(-Angle_pid_output_value,Angle_pid_output_value);
-			}
-			else{
-				jj = 0;
-			}
-
-
-		
-			
-		
-//			HAL_UART_Transmit_DMA(&huart6,(uint8_t *)a1_check,17);
-//			HAL_UART_Transmit_DMA(&huart1,(uint8_t *)a1_check,17);
-//		
-//		dm_motor_ctrl_send(&hcan1, &motor[Motor1]);
-//		dm_motor_ctrl_send(&hcan2, &motor[Motor1]);
-
-	
-	
   /* USER CODE END TIM6_DAC_IRQn 0 */
   HAL_TIM_IRQHandler(&htim6);
   /* USER CODE BEGIN TIM6_DAC_IRQn 1 */

@@ -53,3 +53,11 @@ poorguy405\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers
 poorguy405\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 poorguy405\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 poorguy405\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
+poorguy405\freertos.o: ../App/MahonyAHRS.h
+poorguy405\freertos.o: ../Device/BMI088/inc/BMI088driver.h
+poorguy405\freertos.o: ../App/pid.h
+poorguy405\freertos.o: ../Device/odrive/odrive_can.h
+poorguy405\freertos.o: ../Device/unitreeMotor/unitreeA1_cmd.h
+poorguy405\freertos.o: ../Device/unitreeMotor/motor_msg.h
+poorguy405\freertos.o: ../Device/unitreeMotor/motor_msg.h
+poorguy405\freertos.o: ../Core/Inc/usart.h

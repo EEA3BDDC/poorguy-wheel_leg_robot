@@ -19,6 +19,10 @@ void bsp_device_init(){
 	
 	bsp_can_init();	
 	
+	HAL_GPIO_WritePin(led_r_GPIO_Port,led_r_Pin,GPIO_PIN_SET); //turn off red led;
+	HAL_GPIO_WritePin(led_g_GPIO_Port,led_g_Pin,GPIO_PIN_SET);
+	HAL_GPIO_WritePin(led_b_GPIO_Port,led_b_Pin,GPIO_PIN_SET);	
+	
 	HAL_GPIO_WritePin(dir1_485_GPIO_Port,dir1_485_Pin,GPIO_PIN_SET);//TX mode
 	HAL_GPIO_WritePin(dir2_485_GPIO_Port,dir2_485_Pin,GPIO_PIN_SET);
 	
@@ -39,7 +43,7 @@ void bsp_device_init(){
 #endif
 	
 	
-	//startup_sing();	//init ALL ok
+	startup_sing();	//init ALL ok
 }
 
 

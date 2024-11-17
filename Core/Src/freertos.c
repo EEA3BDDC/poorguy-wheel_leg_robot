@@ -25,7 +25,11 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "MahonyAHRS.h"
+#include "BMI088driver.h"
+#include "pid.h"
+#include "odrive_can.h"
+#include "unitreeA1_cmd.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,7 +49,11 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
+float Gyro[3], Accel[3], temp;
+AHRSIMU_t IMU;
 
+float vel_pid_output_value; 
+float Angle_pid_output_value;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 osThreadId balance_TasHandle;
@@ -167,9 +175,21 @@ void balance_ctrl(void const * argument)
 {
   /* USER CODE BEGIN balance_ctrl */
   /* Infinite loop */
+	
+	TickType_t xlastwakeTime;
+	xlastwakeTime =xTaskGetTickCount();
+	
   for(;;)
   {
-    osDelay(1);
+		BMI088_read(Gyro, Accel, &temp);
+		MahonyAHRSupdateIMU(&IMU,Gyro[0],Gyro[1],Gyro[2],Accel[0],Accel[1],Accel[2]);
+		
+		vel_pid_output_value = Velocity_PID(-left_wheel_vel,right_wheel_vel,0);		
+		Angle_pid_output_value = Angle_PID_Output(vel_pid_output_value,IMU.Pitch);
+		
+//		send_wheel_torque(0,0);
+		
+		vTaskDelayUntil(&xlastwakeTime,10); //ms
   }
   /* USER CODE END balance_ctrl */
 }
@@ -187,7 +207,10 @@ void leg_ctrl(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+		unitreeA1_sendCMD(&cmd_left,2, 0.15, 0, 0, 0, 0);
+		osDelay(200);
+//		unitreeA1_sendCMD(&cmd_left,1, 0.2, 0, 0, 0, 0);
+//		osDelay(200);
   }
   /* USER CODE END leg_ctrl */
 }
@@ -221,9 +244,30 @@ void blink_status(void const * argument)
 {
   /* USER CODE BEGIN blink_status */
   /* Infinite loop */
+	static uint8_t motor_power_en;
   for(;;)
   {
-    osDelay(1);
+		if(HAL_GPIO_ReadPin(key_c_GPIO_Port,key_c_Pin) == GPIO_PIN_RESET){ //motor power disable	
+			HAL_GPIO_TogglePin(led_r_GPIO_Port,led_r_Pin); //blink Red led
+			HAL_GPIO_WritePin(led_g_GPIO_Port,led_g_Pin,GPIO_PIN_SET); 
+			HAL_GPIO_WritePin(led_b_GPIO_Port,led_b_Pin,GPIO_PIN_SET); 
+			motor_power_en = 0;
+			osDelay(200);
+		}
+		else if(HAL_GPIO_ReadPin(key_c_GPIO_Port,key_c_Pin) == GPIO_PIN_SET && motor_power_en == 0){ //if All motor power enable
+			HAL_GPIO_WritePin(led_r_GPIO_Port,led_r_Pin,GPIO_PIN_RESET); //turn on red led;
+			HAL_GPIO_WritePin(led_g_GPIO_Port,led_g_Pin,GPIO_PIN_RESET); //turn on green led;	 mean yellow light
+			HAL_GPIO_WritePin(led_b_GPIO_Port,led_b_Pin,GPIO_PIN_SET); //turn off blue led;
+			osDelay(2000); //waiting motor startup
+			motor_power_en = 1;
+		}	
+
+		if(motor_power_en == 1){
+			HAL_GPIO_WritePin(led_r_GPIO_Port,led_r_Pin,GPIO_PIN_SET); 
+			HAL_GPIO_WritePin(led_b_GPIO_Port,led_b_Pin,GPIO_PIN_SET); 
+			HAL_GPIO_TogglePin(led_g_GPIO_Port,led_g_Pin); //blink green led
+			osDelay(35);
+		}
   }
   /* USER CODE END blink_status */
 }

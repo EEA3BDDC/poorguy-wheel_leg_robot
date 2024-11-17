@@ -40,11 +40,3 @@ poorguy405\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd
 poorguy405\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
 poorguy405\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
 poorguy405\stm32f4xx_it.o: ../Core/Inc/stm32f4xx_it.h
-poorguy405\stm32f4xx_it.o: ../Device/BMI088/inc/BMI088driver.h
-poorguy405\stm32f4xx_it.o: ../App/MahonyAHRS.h
-poorguy405\stm32f4xx_it.o: ../App/pid.h
-poorguy405\stm32f4xx_it.o: ../Device/DM4310/bsp_can.h
-poorguy405\stm32f4xx_it.o: ../Core/Inc/can.h
-poorguy405\stm32f4xx_it.o: ../Device/DM4310/dm_motor_drv.h
-poorguy405\stm32f4xx_it.o: ../Device/DM4310/dm_motor_ctrl.h
-poorguy405\stm32f4xx_it.o: ../Device/odrive/odrive_can.h

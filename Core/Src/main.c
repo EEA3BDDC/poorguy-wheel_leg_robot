@@ -114,36 +114,12 @@ int main(void)
   MX_TIM12_Init();
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
-		bsp_device_init();
+	bsp_device_init();
 		
 	
 		
-	HAL_GPIO_WritePin(led_r_GPIO_Port,led_r_Pin,GPIO_PIN_SET); //turn off red led;
-	HAL_GPIO_WritePin(led_g_GPIO_Port,led_g_Pin,GPIO_PIN_SET);
-	HAL_GPIO_WritePin(led_b_GPIO_Port,led_b_Pin,GPIO_PIN_SET);	
-	
-		
-	while(1){
-		HAL_Delay(200);
-		HAL_GPIO_TogglePin(led_r_GPIO_Port,led_r_Pin);
-	
-		if(HAL_GPIO_ReadPin(key_c_GPIO_Port,key_c_Pin) == GPIO_PIN_SET){ //if all the motor has power supply
-			HAL_GPIO_WritePin(led_r_GPIO_Port,led_r_Pin,GPIO_PIN_SET); //turn off red led;
-			break;
-		}
-	}
-		HAL_Delay(2000);
-		HAL_GPIO_TogglePin(led_r_GPIO_Port,led_r_Pin);
-		HAL_GPIO_TogglePin(led_g_GPIO_Port,led_g_Pin);
-		
-		if(HAL_GPIO_ReadPin(key_d_GPIO_Port,key_d_Pin) == GPIO_PIN_SET)
-			HAL_GPIO_WritePin(led_r_GPIO_Port,led_r_Pin,GPIO_PIN_SET); //turn off red led;
-			//A1_turn_slow_test();
-			
-		unitreeA1_sendCMD(&cmd_left,2, 0.15, 0, 0, 0, 0);
-		HAL_Delay(100);
-		unitreeA1_sendCMD(&cmd_left,1, 0.2, 0, 0, 0, 0);
-			//HAL_TIM_Base_Start_IT(&htim6);// 50hz event
+
+
 	
 	
 	
